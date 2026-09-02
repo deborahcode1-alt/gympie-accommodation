@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { del } from "@vercel/blob";
 import { prisma } from "@/lib/prisma";
 
 const addSchema = z.object({
@@ -34,6 +35,14 @@ export async function POST(
 export async function DELETE(req: NextRequest) {
   const photoId = req.nextUrl.searchParams.get("photoId");
   if (!photoId) return NextResponse.json({ error: "photoId required" }, { status: 400 });
-  await prisma.photo.delete({ where: { id: photoId } });
+
+  const photo = await prisma.photo.delete({ where: { id: photoId } });
+
+  if (photo.url.includes(".public.blob.vercel-storage.com/")) {
+    await del(photo.url).catch(() => {
+      // Best-effort — the DB record is already gone either way.
+    });
+  }
+
   return NextResponse.json({ ok: true });
 }
