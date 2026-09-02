@@ -12,8 +12,11 @@ export async function GET(
   const listing = await prisma.listing.findUnique({
     where: { icalExportToken: token },
     include: {
+      // Every unavailable date goes out on this one feed — including dates that came in
+      // from another connected platform — so pasting it into Airbnb, Booking.com, etc.
+      // keeps all of them in sync with each other, not just with direct bookings.
       bookings: { where: { status: { in: ["PENDING", "CONFIRMED"] } } },
-      blockedDates: { where: { source: "manual" } },
+      blockedDates: true,
     },
   });
 

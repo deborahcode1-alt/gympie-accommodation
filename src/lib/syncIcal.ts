@@ -11,12 +11,12 @@ export async function syncListingImports(listingId: string) {
       const uniqueDates = [...new Set(blocks.map((b) => b.date.toISOString()))];
 
       await prisma.$transaction([
-        prisma.blockedDate.deleteMany({ where: { listingId, source: "airbnb" } }),
+        prisma.blockedDate.deleteMany({ where: { listingId, source: imp.id } }),
         prisma.blockedDate.createMany({
           data: uniqueDates.map((iso) => ({
             listingId,
             date: new Date(iso),
-            source: "airbnb",
+            source: imp.id,
             reason: imp.label,
           })),
         }),

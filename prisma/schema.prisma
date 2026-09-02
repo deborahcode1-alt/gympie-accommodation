@@ -80,9 +80,9 @@ model BlockedDate {
   listingId String
   date      DateTime
   reason    String?
-  source    String   @default("manual") // manual | airbnb
+  source    String   @default("manual") // "manual", or an IcalImportUrl id (one connected calendar)
 
-  @@unique([listingId, date])
+  @@unique([listingId, date, source])
 }
 
 model IcalImportUrl {

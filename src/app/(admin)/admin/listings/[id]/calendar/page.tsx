@@ -27,10 +27,11 @@ export default async function ListingCalendarPage({
       <h1 className="text-2xl font-semibold">{listing.name} &mdash; Calendar &amp; sync</h1>
 
       <section className="mt-8">
-        <h2 className="text-lg font-semibold">Export to Airbnb</h2>
+        <h2 className="text-lg font-semibold">Export to other platforms</h2>
         <p className="mt-1 text-sm text-black/60 dark:text-white/60">
-          Paste this URL into Airbnb (Calendar &rarr; Availability settings &rarr; Import
-          calendar) so direct bookings and manual blocks show up as unavailable on Airbnb.
+          Paste this URL into each platform&apos;s &quot;import calendar&quot; setting (Airbnb,
+          Booking.com, VRBO, etc.) so direct bookings and manual blocks show up as unavailable
+          everywhere.
         </p>
         <div className="mt-3">
           <CopyableUrl url={exportUrl} />
@@ -38,10 +39,10 @@ export default async function ListingCalendarPage({
       </section>
 
       <section className="mt-10">
-        <h2 className="text-lg font-semibold">Import from Airbnb</h2>
+        <h2 className="text-lg font-semibold">Import from other platforms</h2>
         <p className="mt-1 text-sm text-black/60 dark:text-white/60">
-          Connect your Airbnb export calendar so bookings made on Airbnb block those dates here
-          too.
+          Connect each platform&apos;s export calendar so bookings made there block those dates
+          here too. Add one per platform &mdash; Airbnb, Booking.com, VRBO, etc.
         </p>
         <div className="mt-3">
           <IcalImportManager listingId={listing.id} imports={listing.icalImports} />
@@ -51,7 +52,11 @@ export default async function ListingCalendarPage({
       <section className="mt-10">
         <h2 className="text-lg font-semibold">Blocked dates</h2>
         <div className="mt-3">
-          <BlockedDatesManager listingId={listing.id} blocked={listing.blockedDates} />
+          <BlockedDatesManager
+            listingId={listing.id}
+            blocked={listing.blockedDates}
+            imports={listing.icalImports}
+          />
         </div>
       </section>
     </div>

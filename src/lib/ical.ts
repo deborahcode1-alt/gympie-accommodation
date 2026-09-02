@@ -43,6 +43,15 @@ export function buildIcalFeed(params: {
 
 export type ImportedBlock = { date: Date };
 
+// node-ical parses all-day `DTSTART;VALUE=DATE` fields into a Date built from local
+// calendar-date components (e.g. local midnight), not UTC — so recovering the intended
+// calendar day must read local getters, then re-anchor to our UTC-midnight storage
+// convention. Using UTC getters here would shift every date by a day on any server whose
+// local timezone isn't UTC+0.
+function localDateToUTCDateOnly(d: Date) {
+  return new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+}
+
 export async function fetchImportedBlocks(url: string): Promise<ImportedBlock[]> {
   const data = await nodeIcal.async.fromURL(url);
   const blocks: ImportedBlock[] = [];
@@ -53,8 +62,8 @@ export async function fetchImportedBlocks(url: string): Promise<ImportedBlock[]>
     const vevent = event as unknown as { start?: Date; end?: Date };
     if (!vevent.start || !vevent.end) continue;
 
-    const cursor = toDateOnly(vevent.start);
-    const end = toDateOnly(vevent.end);
+    const cursor = localDateToUTCDateOnly(vevent.start);
+    const end = localDateToUTCDateOnly(vevent.end);
     while (cursor < end) {
       blocks.push({ date: new Date(cursor) });
       cursor.setUTCDate(cursor.getUTCDate() + 1);

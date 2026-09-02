@@ -21,7 +21,7 @@ export function IcalImportManager({
 }) {
   const router = useRouter();
   const [url, setUrl] = useState("");
-  const [label, setLabel] = useState("Airbnb");
+  const [label, setLabel] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,6 +37,7 @@ export function IcalImportManager({
       });
       if (!res.ok) throw new Error("Could not add that calendar URL");
       setUrl("");
+      setLabel("");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not add calendar");
@@ -97,8 +98,9 @@ export function IcalImportManager({
         ))}
         {imports.length === 0 && (
           <p className="text-sm text-black/60 dark:text-white/60">
-            No calendars connected yet. Add your Airbnb listing&apos;s export calendar URL below
-            (Airbnb &rarr; Calendar &rarr; Availability settings &rarr; Export calendar).
+            No calendars connected yet. Connect as many booking platforms as you use (Airbnb,
+            Booking.com, VRBO, etc.) &mdash; each has an &quot;export calendar&quot; URL in its
+            calendar settings.
           </p>
         )}
       </div>
@@ -107,13 +109,14 @@ export function IcalImportManager({
         <input
           value={label}
           onChange={(e) => setLabel(e.target.value)}
-          placeholder="Label"
-          className="w-32 rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20"
+          placeholder="Label (e.g. Booking.com)"
+          required
+          className="w-44 rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20"
         />
         <input
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          placeholder="https://www.airbnb.com/calendar/ical/....ics"
+          placeholder="https://.../calendar/ical/....ics"
           required
           className="min-w-[260px] flex-1 rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20"
         />

@@ -21,7 +21,11 @@ export async function POST(
 
   const blocked = await prisma.blockedDate.upsert({
     where: {
-      listingId_date: { listingId: id, date: toDateOnly(parsed.data.date) },
+      listingId_date_source: {
+        listingId: id,
+        date: toDateOnly(parsed.data.date),
+        source: "manual",
+      },
     },
     create: {
       listingId: id,

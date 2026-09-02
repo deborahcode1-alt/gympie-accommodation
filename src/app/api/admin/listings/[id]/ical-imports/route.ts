@@ -5,7 +5,7 @@ import { syncListingImports } from "@/lib/syncIcal";
 
 const addSchema = z.object({
   url: z.string().url(),
-  label: z.string().max(100).default("Airbnb"),
+  label: z.string().min(1).max(100),
 });
 
 export async function POST(
@@ -31,6 +31,9 @@ export async function POST(
 export async function DELETE(req: NextRequest) {
   const importId = req.nextUrl.searchParams.get("importId");
   if (!importId) return NextResponse.json({ error: "importId required" }, { status: 400 });
-  await prisma.icalImportUrl.delete({ where: { id: importId } });
+  await prisma.$transaction([
+    prisma.blockedDate.deleteMany({ where: { source: importId } }),
+    prisma.icalImportUrl.delete({ where: { id: importId } }),
+  ]);
   return NextResponse.json({ ok: true });
 }
