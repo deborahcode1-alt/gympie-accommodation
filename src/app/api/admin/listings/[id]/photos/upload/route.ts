@@ -17,7 +17,13 @@ export async function POST(
           throw new Error("Invalid upload path");
         }
         return {
-          allowedContentTypes: ["image/jpeg", "image/png", "image/webp", "image/gif"],
+          allowedContentTypes: [
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/gif",
+            "image/avif",
+          ],
           addRandomSuffix: true,
           maximumSizeInBytes: 15 * 1024 * 1024,
         };

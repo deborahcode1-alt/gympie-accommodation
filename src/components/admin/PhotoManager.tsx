@@ -177,7 +177,7 @@ export function PhotoManager({ listingId, photos }: { listingId: string; photos:
       >
         <p className="text-sm font-medium">Drag photos here, or click to browse</p>
         <p className="text-xs text-black/50 dark:text-white/50">
-          JPG, PNG, WEBP or GIF, up to 15MB each. The first photo becomes the cover photo.
+          JPG, PNG, WEBP, AVIF or GIF, up to 15MB each. The first photo becomes the cover photo.
         </p>
         <input
           ref={fileInputRef}
