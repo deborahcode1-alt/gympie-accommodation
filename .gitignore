@@ -47,3 +47,7 @@ next-env.d.ts
 
 .vercel
 .env*
+
+# local testing artifacts
+cookies.txt
+*.cookies.txt
