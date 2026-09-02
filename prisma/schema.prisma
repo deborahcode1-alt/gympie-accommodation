@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String @id @default(cuid())
+  email        String @unique
+  passwordHash String
+}
+
+model Listing {
+  id              String   @id @default(cuid())
+  name            String
+  slug            String   @unique
+  tagline         String?
+  description     String
+  address         String?
+  maxGuests       Int      @default(2)
+  bedrooms        Int      @default(1)
+  beds            Int      @default(1)
+  baths           Float    @default(1)
+  basePrice       Float
+  cleaningFee     Float    @default(0)
+  minNights       Int      @default(1)
+  amenities       String   @default("[]") // JSON string array
+  icalExportToken String   @unique @default(cuid())
+  published       Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  photos         Photo[]
+  bookings       Booking[]
+  blockedDates   BlockedDate[]
+  icalImports    IcalImportUrl[]
+}
+
+model Photo {
+  id        String  @id @default(cuid())
+  url       String
+  alt       String  @default("")
+  order     Int     @default(0)
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  listingId String
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  DECLINED
+  CANCELLED
+}
+
+model Booking {
+  id          String        @id @default(cuid())
+  listing     Listing       @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  listingId   String
+  guestName   String
+  guestEmail  String
+  guestPhone  String?
+  checkIn     DateTime
+  checkOut    DateTime
+  guests      Int           @default(1)
+  status      BookingStatus @default(PENDING)
+  totalPrice  Float
+  message     String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([listingId, checkIn, checkOut])
+}
+
+model BlockedDate {
+  id        String   @id @default(cuid())
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  listingId String
+  date      DateTime
+  reason    String?
+  source    String   @default("manual") // manual | airbnb
+
+  @@unique([listingId, date])
+}
+
+model IcalImportUrl {
+  id           String    @id @default(cuid())
+  listing      Listing   @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  listingId    String
+  url          String
+  label        String    @default("Airbnb")
+  lastSyncedAt DateTime?
+  lastError    String?
+}
