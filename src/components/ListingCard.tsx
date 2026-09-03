@@ -16,9 +16,9 @@ export function ListingCard({ slug, name, tagline, basePrice, maxGuests, bedroom
   return (
     <Link
       href={`/listings/${slug}`}
-      className="group block overflow-hidden rounded-xl border border-black/10 transition hover:shadow-md dark:border-white/15"
+      className="group block overflow-hidden rounded-sm border border-card-border bg-background transition hover:shadow-md"
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-black/5 dark:bg-white/5">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-foreground/5">
         {coverPhoto ? (
           <Image
             src={coverPhoto}
@@ -28,18 +28,18 @@ export function ListingCard({ slug, name, tagline, basePrice, maxGuests, bedroom
             className="object-cover transition group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-sm text-black/40 dark:text-white/40">
+          <div className="flex h-full items-center justify-center text-sm text-muted">
             No photo yet
           </div>
         )}
       </div>
       <div className="p-4">
         <h3 className="font-semibold">{name}</h3>
-        {tagline && <p className="mt-1 text-sm text-black/60 dark:text-white/60">{tagline}</p>}
-        <p className="mt-2 text-sm text-black/70 dark:text-white/70">
+        {tagline && <p className="mt-1 text-sm text-muted">{tagline}</p>}
+        <p className="mt-2 text-sm text-muted">
           Up to {maxGuests} guests &middot; {bedrooms} bedroom{bedrooms === 1 ? "" : "s"}
         </p>
-        <p className="mt-2 text-sm font-medium">{formatMoney(basePrice)} / night</p>
+        <p className="mt-2 text-sm font-medium text-accent-deep">{formatMoney(basePrice)} / night</p>
       </div>
     </Link>
   );
