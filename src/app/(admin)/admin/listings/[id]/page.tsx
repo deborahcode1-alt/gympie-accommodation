@@ -34,7 +34,7 @@ export default async function EditListingPage({
           href={`/admin/listings/${listing.id}/calendar`}
           className="rounded-md border border-card-border px-4 py-2 text-sm font-medium"
         >
-          Calendar &amp; Airbnb sync
+          Calendar &amp; sync
         </Link>
       </div>
 
@@ -54,7 +54,9 @@ export default async function EditListingPage({
               name: listing.name,
               tagline: listing.tagline ?? "",
               description: listing.description,
+              cancellationPolicy: listing.cancellationPolicy ?? "",
               address: listing.address ?? "",
+              stayType: listing.stayType,
               maxGuests: listing.maxGuests,
               bedrooms: listing.bedrooms,
               beds: listing.beds,
@@ -64,6 +66,7 @@ export default async function EditListingPage({
               minNights: listing.minNights,
               amenities: JSON.parse(listing.amenities || "[]"),
               published: listing.published,
+              hostId: listing.hostId,
             }}
           />
         </div>

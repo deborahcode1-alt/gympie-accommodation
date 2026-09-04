@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const listings = await prisma.listing.findMany({
     where: { published: true },
-    orderBy: { createdAt: "asc" },
+    orderBy: { basePrice: "asc" },
     include: { photos: { orderBy: { order: "asc" }, take: 1 } },
   });
 
@@ -27,8 +27,8 @@ export default async function HomePage() {
           <div className="max-w-lg rounded-sm bg-header-bg/90 px-8 py-7 text-center text-header-fg shadow-lg backdrop-blur-sm sm:text-left">
             <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{SITE_TAGLINE}</h1>
             <p className="mt-3 text-sm text-header-fg/80">
-              Check real-time availability and request your stay directly &mdash; the same
-              calendar we keep in sync with Airbnb.
+              Check real-time availability and book direct &mdash; from budget rooms to whole
+              houses, all in one place.
             </p>
           </div>
         </div>
@@ -48,6 +48,7 @@ export default async function HomePage() {
                 basePrice={l.basePrice}
                 maxGuests={l.maxGuests}
                 bedrooms={l.bedrooms}
+                stayType={l.stayType}
                 coverPhoto={l.photos[0]?.url ?? null}
               />
             ))}

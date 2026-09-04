@@ -15,9 +15,17 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://gympie-accommodation.vercel.app";
+
 export const metadata: Metadata = {
-  title: SITE_NAME,
-  description: SITE_TAGLINE,
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
+  description: `${SITE_TAGLINE} Rooms and whole houses in Gympie, from budget to luxury.`,
+  openGraph: {
+    title: SITE_NAME,
+    description: SITE_TAGLINE,
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

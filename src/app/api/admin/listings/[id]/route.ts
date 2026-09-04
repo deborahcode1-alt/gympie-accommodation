@@ -6,7 +6,9 @@ const updateSchema = z.object({
   name: z.string().min(1).max(200).optional(),
   tagline: z.string().max(300).optional(),
   description: z.string().min(1).optional(),
+  cancellationPolicy: z.string().max(4000).optional(),
   address: z.string().max(300).optional(),
+  stayType: z.enum(["SHORT_TERM", "LONG_TERM"]).optional(),
   maxGuests: z.coerce.number().int().min(1).optional(),
   bedrooms: z.coerce.number().int().min(0).optional(),
   beds: z.coerce.number().int().min(0).optional(),
@@ -16,6 +18,7 @@ const updateSchema = z.object({
   minNights: z.coerce.number().int().min(1).optional(),
   amenities: z.array(z.string()).optional(),
   published: z.boolean().optional(),
+  hostId: z.string().nullable().optional(),
 });
 
 export async function GET(
@@ -30,6 +33,7 @@ export async function GET(
       blockedDates: true,
       icalImports: true,
       bookings: { orderBy: { checkIn: "asc" } },
+      host: true,
     },
   });
   if (!listing) return NextResponse.json({ error: "Not found" }, { status: 404 });

@@ -13,26 +13,48 @@ model AdminUser {
   passwordHash String
 }
 
-model Listing {
-  id              String   @id @default(cuid())
-  name            String
-  slug            String   @unique
-  tagline         String?
-  description     String
-  address         String?
-  maxGuests       Int      @default(2)
-  bedrooms        Int      @default(1)
-  beds            Int      @default(1)
-  baths           Float    @default(1)
-  basePrice       Float
-  cleaningFee     Float    @default(0)
-  minNights       Int      @default(1)
-  amenities       String   @default("[]") // JSON string array
-  icalExportToken String   @unique @default(cuid())
-  published       Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+// One per host family/business — holds the Square account payments for their
+// listings should be routed to. Credentials are nullable because a host may
+// not have Square set up yet; bookings fall back to request-only until then.
+model Host {
+  id                  String  @id @default(cuid())
+  name                String
+  squareAccessToken   String?
+  squareLocationId    String?
+  createdAt           DateTime @default(now())
 
+  listings Listing[]
+}
+
+enum StayType {
+  SHORT_TERM
+  LONG_TERM
+}
+
+model Listing {
+  id                 String   @id @default(cuid())
+  name               String
+  slug               String   @unique
+  tagline            String?
+  description        String
+  cancellationPolicy String? // falls back to a site-wide default draft policy when null
+  address            String?
+  stayType           StayType @default(SHORT_TERM)
+  maxGuests          Int      @default(2)
+  bedrooms           Int      @default(1)
+  beds               Int      @default(1)
+  baths              Float    @default(1)
+  basePrice          Float
+  cleaningFee        Float    @default(0)
+  minNights          Int      @default(1)
+  amenities          String   @default("[]") // JSON string array
+  icalExportToken    String   @unique @default(cuid())
+  published          Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  host           Host?           @relation(fields: [hostId], references: [id])
+  hostId         String?
   photos         Photo[]
   bookings       Booking[]
   blockedDates   BlockedDate[]
@@ -55,21 +77,30 @@ enum BookingStatus {
   CANCELLED
 }
 
+enum PaymentStatus {
+  UNPAID // no payment processor connected yet, or payment not yet collected
+  PAID
+  REFUNDED
+}
+
 model Booking {
-  id          String        @id @default(cuid())
-  listing     Listing       @relation(fields: [listingId], references: [id], onDelete: Cascade)
-  listingId   String
-  guestName   String
-  guestEmail  String
-  guestPhone  String?
-  checkIn     DateTime
-  checkOut    DateTime
-  guests      Int           @default(1)
-  status      BookingStatus @default(PENDING)
-  totalPrice  Float
-  message     String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id             String        @id @default(cuid())
+  listing        Listing       @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  listingId      String
+  guestName      String
+  guestEmail     String
+  guestPhone     String?
+  checkIn        DateTime
+  checkOut       DateTime
+  guests         Int           @default(1)
+  status         BookingStatus @default(PENDING)
+  totalPrice     Float
+  message        String?
+  agreedToTerms  Boolean       @default(false)
+  paymentStatus  PaymentStatus @default(UNPAID)
+  squarePaymentId String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   @@index([listingId, checkIn, checkOut])
 }
@@ -90,7 +121,7 @@ model IcalImportUrl {
   listing      Listing   @relation(fields: [listingId], references: [id], onDelete: Cascade)
   listingId    String
   url          String
-  label        String    @default("Airbnb")
+  label        String    @default("Calendar")
   lastSyncedAt DateTime?
   lastError    String?
 }

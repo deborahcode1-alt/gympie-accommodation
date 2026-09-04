@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatMoney } from "@/lib/format";
+import { stayTypeLabel, type StayType } from "@/lib/stayType";
 
 type Props = {
   slug: string;
@@ -9,10 +10,20 @@ type Props = {
   basePrice: number;
   maxGuests: number;
   bedrooms: number;
+  stayType: StayType;
   coverPhoto: string | null;
 };
 
-export function ListingCard({ slug, name, tagline, basePrice, maxGuests, bedrooms, coverPhoto }: Props) {
+export function ListingCard({
+  slug,
+  name,
+  tagline,
+  basePrice,
+  maxGuests,
+  bedrooms,
+  stayType,
+  coverPhoto,
+}: Props) {
   return (
     <Link
       href={`/listings/${slug}`}
@@ -32,6 +43,9 @@ export function ListingCard({ slug, name, tagline, basePrice, maxGuests, bedroom
             No photo yet
           </div>
         )}
+        <span className="absolute left-3 top-3 rounded-full bg-header-bg/90 px-2.5 py-1 text-xs font-medium text-header-fg">
+          {stayTypeLabel(stayType)}
+        </span>
       </div>
       <div className="p-4">
         <h3 className="font-semibold">{name}</h3>

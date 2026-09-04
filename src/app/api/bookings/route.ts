@@ -12,6 +12,7 @@ const bookingSchema = z.object({
   checkOut: z.coerce.date(),
   guests: z.coerce.number().int().min(1).max(50),
   message: z.string().max(2000).optional(),
+  agreedToTerms: z.boolean().default(false),
 });
 
 export async function POST(req: NextRequest) {
@@ -63,6 +64,7 @@ export async function POST(req: NextRequest) {
       message: data.message,
       totalPrice,
       status: "PENDING",
+      agreedToTerms: data.agreedToTerms,
     },
   });
 

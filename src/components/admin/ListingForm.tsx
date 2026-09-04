@@ -1,14 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
+type Host = { id: string; name: string; squareConnected: boolean };
 
 type Initial = {
   id?: string;
   name: string;
   tagline: string;
   description: string;
+  cancellationPolicy: string;
   address: string;
+  stayType: "SHORT_TERM" | "LONG_TERM";
   maxGuests: number;
   bedrooms: number;
   beds: number;
@@ -18,13 +22,16 @@ type Initial = {
   minNights: number;
   amenities: string[];
   published: boolean;
+  hostId: string | null;
 };
 
 const empty: Initial = {
   name: "",
   tagline: "",
   description: "",
+  cancellationPolicy: "",
   address: "",
+  stayType: "SHORT_TERM",
   maxGuests: 2,
   bedrooms: 1,
   beds: 1,
@@ -34,14 +41,23 @@ const empty: Initial = {
   minNights: 1,
   amenities: [],
   published: true,
+  hostId: null,
 };
 
 export function ListingForm({ initial }: { initial?: Initial }) {
   const router = useRouter();
   const [form, setForm] = useState<Initial>(initial ?? empty);
   const [amenitiesText, setAmenitiesText] = useState((initial?.amenities ?? []).join(", "));
+  const [hosts, setHosts] = useState<Host[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/admin/hosts")
+      .then((r) => r.json())
+      .then((data) => setHosts(data.hosts ?? []))
+      .catch(() => {});
+  }, []);
 
   function update<K extends keyof Initial>(key: K, value: Initial[K]) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -54,6 +70,8 @@ export function ListingForm({ initial }: { initial?: Initial }) {
 
     const payload = {
       ...form,
+      cancellationPolicy: form.cancellationPolicy || undefined,
+      hostId: form.hostId || undefined,
       amenities: amenitiesText
         .split(",")
         .map((a) => a.trim())
@@ -124,6 +142,35 @@ export function ListingForm({ initial }: { initial?: Initial }) {
           className="rounded-md border border-card-border px-3 py-2"
         />
       </label>
+
+      <div className="grid grid-cols-2 gap-4">
+        <label className="flex flex-col gap-1 text-sm">
+          Stay type
+          <select
+            value={form.stayType}
+            onChange={(e) => update("stayType", e.target.value as Initial["stayType"])}
+            className="rounded-md border border-card-border px-3 py-2"
+          >
+            <option value="SHORT_TERM">Short-term stay</option>
+            <option value="LONG_TERM">Long-term stay</option>
+          </select>
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
+          Host (Square payout account)
+          <select
+            value={form.hostId ?? ""}
+            onChange={(e) => update("hostId", e.target.value || null)}
+            className="rounded-md border border-card-border px-3 py-2"
+          >
+            <option value="">Unassigned</option>
+            {hosts.map((h) => (
+              <option key={h.id} value={h.id}>
+                {h.name} {h.squareConnected ? "" : "(Square not connected)"}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <label className="flex flex-col gap-1 text-sm">
@@ -210,6 +257,21 @@ export function ListingForm({ initial }: { initial?: Initial }) {
           placeholder="Wifi, Kitchen, Free parking, Pool"
           className="rounded-md border border-card-border px-3 py-2"
         />
+      </label>
+
+      <label className="flex flex-col gap-1 text-sm">
+        Payment &amp; cancellation terms
+        <textarea
+          value={form.cancellationPolicy}
+          onChange={(e) => update("cancellationPolicy", e.target.value)}
+          rows={4}
+          placeholder="Leave blank to use the site's default draft policy"
+          className="rounded-md border border-card-border px-3 py-2"
+        />
+        <span className="text-xs text-muted">
+          Shown on the listing page and at booking. Leave blank to use the default draft policy
+          until you have real terms for this listing.
+        </span>
       </label>
 
       <label className="flex items-center gap-2 text-sm">

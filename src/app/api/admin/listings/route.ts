@@ -7,7 +7,9 @@ const listingSchema = z.object({
   name: z.string().min(1).max(200),
   tagline: z.string().max(300).optional(),
   description: z.string().min(1),
+  cancellationPolicy: z.string().max(4000).optional(),
   address: z.string().max(300).optional(),
+  stayType: z.enum(["SHORT_TERM", "LONG_TERM"]).default("SHORT_TERM"),
   maxGuests: z.coerce.number().int().min(1),
   bedrooms: z.coerce.number().int().min(0),
   beds: z.coerce.number().int().min(0),
@@ -17,12 +19,13 @@ const listingSchema = z.object({
   minNights: z.coerce.number().int().min(1).default(1),
   amenities: z.array(z.string()).default([]),
   published: z.boolean().default(true),
+  hostId: z.string().optional(),
 });
 
 export async function GET() {
   const listings = await prisma.listing.findMany({
     orderBy: { createdAt: "desc" },
-    include: { photos: true, _count: { select: { bookings: true } } },
+    include: { photos: true, host: true, _count: { select: { bookings: true } } },
   });
   return NextResponse.json({ listings });
 }
