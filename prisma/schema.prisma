@@ -99,6 +99,7 @@ model Booking {
   agreedToTerms  Boolean       @default(false)
   paymentStatus  PaymentStatus @default(UNPAID)
   squarePaymentId String?
+  confirmationTextSentAt DateTime?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 

@@ -6,11 +6,13 @@ type Row = {
   id: string;
   guestName: string;
   guestEmail: string;
+  guestPhone: string | null;
   checkIn: Date;
   checkOut: Date;
   guests: number;
   totalPrice: number;
   status: string;
+  confirmationTextSentAt: Date | null;
   listing: { name: string };
 };
 
@@ -50,7 +52,12 @@ export function BookingsTable({ bookings }: { bookings: Row[] }) {
                 <StatusBadge status={b.status} />
               </td>
               <td className="px-4 py-3">
-                <BookingActions bookingId={b.id} status={b.status} />
+                <BookingActions
+                  bookingId={b.id}
+                  status={b.status}
+                  guestPhone={b.guestPhone}
+                  confirmationTextSentAt={b.confirmationTextSentAt}
+                />
               </td>
             </tr>
           ))}

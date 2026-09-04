@@ -3,9 +3,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export function BookingActions({ bookingId, status }: { bookingId: string; status: string }) {
+type Props = {
+  bookingId: string;
+  status: string;
+  guestPhone: string | null;
+  confirmationTextSentAt: Date | null;
+};
+
+export function BookingActions({ bookingId, status, guestPhone, confirmationTextSentAt }: Props) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const [textError, setTextError] = useState<string | null>(null);
+  const [textSentAt, setTextSentAt] = useState(confirmationTextSentAt);
 
   async function setStatus(next: string) {
     setBusy(true);
@@ -21,36 +30,73 @@ export function BookingActions({ bookingId, status }: { bookingId: string; statu
     }
   }
 
+  async function textConfirmation() {
+    setBusy(true);
+    setTextError(null);
+    try {
+      const res = await fetch(`/api/admin/bookings/${bookingId}/text-confirmation`, {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Couldn't send text");
+      setTextSentAt(new Date(data.booking.confirmationTextSentAt));
+    } catch (err) {
+      setTextError(err instanceof Error ? err.message : "Couldn't send text");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const textButton = guestPhone ? (
+    <button
+      disabled={busy}
+      onClick={textConfirmation}
+      title={textSentAt ? `Last texted ${textSentAt.toLocaleString()}` : undefined}
+      className="rounded-md border border-card-border px-3 py-1.5 text-xs font-medium disabled:opacity-50"
+    >
+      {textSentAt ? "Text again" : "Text confirmation"}
+    </button>
+  ) : null;
+
   if (status === "PENDING") {
     return (
-      <div className="flex gap-2">
-        <button
-          disabled={busy}
-          onClick={() => setStatus("CONFIRMED")}
-          className="rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-white transition hover:bg-accent-deep disabled:opacity-50"
-        >
-          Confirm
-        </button>
-        <button
-          disabled={busy}
-          onClick={() => setStatus("DECLINED")}
-          className="rounded-md border border-card-border px-3 py-1.5 text-xs font-medium disabled:opacity-50"
-        >
-          Decline
-        </button>
+      <div className="flex flex-col items-start gap-1.5">
+        <div className="flex gap-2">
+          <button
+            disabled={busy}
+            onClick={() => setStatus("CONFIRMED")}
+            className="rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-white transition hover:bg-accent-deep disabled:opacity-50"
+          >
+            Confirm
+          </button>
+          <button
+            disabled={busy}
+            onClick={() => setStatus("DECLINED")}
+            className="rounded-md border border-card-border px-3 py-1.5 text-xs font-medium disabled:opacity-50"
+          >
+            Decline
+          </button>
+        </div>
+        {textError && <p className="text-xs text-red-600">{textError}</p>}
       </div>
     );
   }
 
   if (status === "CONFIRMED") {
     return (
-      <button
-        disabled={busy}
-        onClick={() => setStatus("CANCELLED")}
-        className="rounded-md border border-card-border px-3 py-1.5 text-xs font-medium disabled:opacity-50"
-      >
-        Cancel
-      </button>
+      <div className="flex flex-col items-start gap-1.5">
+        <div className="flex flex-wrap gap-2">
+          {textButton}
+          <button
+            disabled={busy}
+            onClick={() => setStatus("CANCELLED")}
+            className="rounded-md border border-card-border px-3 py-1.5 text-xs font-medium disabled:opacity-50"
+          >
+            Cancel
+          </button>
+        </div>
+        {textError && <p className="text-xs text-red-600">{textError}</p>}
+      </div>
     );
   }
 
