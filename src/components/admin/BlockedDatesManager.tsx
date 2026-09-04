@@ -73,7 +73,7 @@ export function BlockedDatesManager({
             value={date}
             onChange={(e) => setDate(e.target.value)}
             required
-            className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
+            className="rounded-md border border-card-border px-3 py-2"
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
@@ -82,13 +82,13 @@ export function BlockedDatesManager({
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             placeholder="Maintenance"
-            className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
+            className="rounded-md border border-card-border px-3 py-2"
           />
         </label>
         <button
           type="submit"
           disabled={busy}
-          className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-black"
+          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white transition hover:bg-accent-deep disabled:opacity-50"
         >
           Block date
         </button>
@@ -101,7 +101,7 @@ export function BlockedDatesManager({
             {manual.map((b) => (
               <li key={b.id} className="flex items-center justify-between">
                 <span>
-                  {formatDate(b.date)} {b.reason && <span className="text-black/50">({b.reason})</span>}
+                  {formatDate(b.date)} {b.reason && <span className="text-muted">({b.reason})</span>}
                 </span>
                 <button
                   onClick={() => removeBlock(b.id)}
@@ -112,18 +112,18 @@ export function BlockedDatesManager({
                 </button>
               </li>
             ))}
-            {manual.length === 0 && <li className="text-black/50 dark:text-white/50">None</li>}
+            {manual.length === 0 && <li className="text-muted">None</li>}
           </ul>
         </div>
 
         {[...bySource.entries()].map(([source, rows]) => (
           <div key={source}>
             <h3 className="text-sm font-semibold">Blocked via {labelFor(source)}</h3>
-            <ul className="mt-2 space-y-1 text-sm text-black/70 dark:text-white/70">
+            <ul className="mt-2 space-y-1 text-sm text-muted">
               {rows.slice(0, 30).map((b) => (
                 <li key={b.id}>{formatDate(b.date)}</li>
               ))}
-              {rows.length > 30 && <li className="text-black/40">+{rows.length - 30} more</li>}
+              {rows.length > 30 && <li className="text-muted">+{rows.length - 30} more</li>}
             </ul>
           </div>
         ))}
@@ -131,7 +131,7 @@ export function BlockedDatesManager({
         {bySource.size === 0 && (
           <div>
             <h3 className="text-sm font-semibold">From connected calendars</h3>
-            <p className="mt-2 text-sm text-black/50 dark:text-white/50">None yet</p>
+            <p className="mt-2 text-sm text-muted">None yet</p>
           </div>
         )}
       </div>

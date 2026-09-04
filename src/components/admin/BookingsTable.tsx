@@ -16,13 +16,13 @@ type Row = {
 
 export function BookingsTable({ bookings }: { bookings: Row[] }) {
   if (bookings.length === 0) {
-    return <p className="text-sm text-black/60 dark:text-white/60">No bookings here yet.</p>;
+    return <p className="text-sm text-muted">No bookings here yet.</p>;
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-black/10 dark:border-white/10">
+    <div className="overflow-x-auto rounded-lg border border-card-border">
       <table className="w-full text-left text-sm">
-        <thead className="bg-black/[.03] text-xs uppercase tracking-wide text-black/50 dark:bg-white/[.03] dark:text-white/50">
+        <thead className="bg-foreground/5 text-xs uppercase tracking-wide text-muted">
           <tr>
             <th className="px-4 py-3">Guest</th>
             <th className="px-4 py-3">Listing</th>
@@ -35,10 +35,10 @@ export function BookingsTable({ bookings }: { bookings: Row[] }) {
         </thead>
         <tbody>
           {bookings.map((b) => (
-            <tr key={b.id} className="border-t border-black/10 dark:border-white/10">
+            <tr key={b.id} className="border-t border-card-border">
               <td className="px-4 py-3">
                 <div className="font-medium">{b.guestName}</div>
-                <div className="text-xs text-black/50 dark:text-white/50">{b.guestEmail}</div>
+                <div className="text-xs text-muted">{b.guestEmail}</div>
               </td>
               <td className="px-4 py-3">{b.listing.name}</td>
               <td className="px-4 py-3">

@@ -21,12 +21,12 @@ export function CopyableUrl({ url }: { url: string }) {
         readOnly
         value={url}
         onFocus={(e) => e.currentTarget.select()}
-        className="flex-1 truncate rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20"
+        className="flex-1 truncate rounded-md border border-card-border px-3 py-2 text-sm"
       />
       <button
         type="button"
         onClick={copy}
-        className="shrink-0 rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20"
+        className="shrink-0 rounded-md border border-card-border px-3 py-2 text-sm"
       >
         {copied ? "Copied" : "Copy"}
       </button>

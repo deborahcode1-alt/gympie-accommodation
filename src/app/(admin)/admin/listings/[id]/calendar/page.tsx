@@ -28,7 +28,7 @@ export default async function ListingCalendarPage({
 
       <section className="mt-8">
         <h2 className="text-lg font-semibold">Export to other platforms</h2>
-        <p className="mt-1 text-sm text-black/60 dark:text-white/60">
+        <p className="mt-1 text-sm text-muted">
           Paste this URL into each platform&apos;s &quot;import calendar&quot; setting (Airbnb,
           Booking.com, VRBO, etc.) so direct bookings and manual blocks show up as unavailable
           everywhere.
@@ -40,7 +40,7 @@ export default async function ListingCalendarPage({
 
       <section className="mt-10">
         <h2 className="text-lg font-semibold">Import from other platforms</h2>
-        <p className="mt-1 text-sm text-black/60 dark:text-white/60">
+        <p className="mt-1 text-sm text-muted">
           Connect each platform&apos;s export calendar so bookings made there block those dates
           here too. Add one per platform &mdash; Airbnb, Booking.com, VRBO, etc.
         </p>

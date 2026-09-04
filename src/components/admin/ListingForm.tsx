@@ -92,7 +92,7 @@ export function ListingForm({ initial }: { initial?: Initial }) {
           value={form.name}
           onChange={(e) => update("name", e.target.value)}
           required
-          className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
+          className="rounded-md border border-card-border px-3 py-2"
         />
       </label>
 
@@ -101,7 +101,7 @@ export function ListingForm({ initial }: { initial?: Initial }) {
         <input
           value={form.tagline}
           onChange={(e) => update("tagline", e.target.value)}
-          className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
+          className="rounded-md border border-card-border px-3 py-2"
         />
       </label>
 
@@ -112,7 +112,7 @@ export function ListingForm({ initial }: { initial?: Initial }) {
           onChange={(e) => update("description", e.target.value)}
           required
           rows={5}
-          className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
+          className="rounded-md border border-card-border px-3 py-2"
         />
       </label>
 
@@ -121,7 +121,7 @@ export function ListingForm({ initial }: { initial?: Initial }) {
         <input
           value={form.address}
           onChange={(e) => update("address", e.target.value)}
-          className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
+          className="rounded-md border border-card-border px-3 py-2"
         />
       </label>
 
@@ -133,7 +133,7 @@ export function ListingForm({ initial }: { initial?: Initial }) {
             min={1}
             value={form.maxGuests}
             onChange={(e) => update("maxGuests", Number(e.target.value))}
-            className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
+            className="rounded-md border border-card-border px-3 py-2"
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
@@ -143,7 +143,7 @@ export function ListingForm({ initial }: { initial?: Initial }) {
             min={0}
             value={form.bedrooms}
             onChange={(e) => update("bedrooms", Number(e.target.value))}
-            className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
+            className="rounded-md border border-card-border px-3 py-2"
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
@@ -153,7 +153,7 @@ export function ListingForm({ initial }: { initial?: Initial }) {
             min={0}
             value={form.beds}
             onChange={(e) => update("beds", Number(e.target.value))}
-            className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
+            className="rounded-md border border-card-border px-3 py-2"
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
@@ -164,7 +164,7 @@ export function ListingForm({ initial }: { initial?: Initial }) {
             step={0.5}
             value={form.baths}
             onChange={(e) => update("baths", Number(e.target.value))}
-            className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
+            className="rounded-md border border-card-border px-3 py-2"
           />
         </label>
       </div>
@@ -177,7 +177,7 @@ export function ListingForm({ initial }: { initial?: Initial }) {
             min={0}
             value={form.basePrice}
             onChange={(e) => update("basePrice", Number(e.target.value))}
-            className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
+            className="rounded-md border border-card-border px-3 py-2"
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
@@ -187,7 +187,7 @@ export function ListingForm({ initial }: { initial?: Initial }) {
             min={0}
             value={form.cleaningFee}
             onChange={(e) => update("cleaningFee", Number(e.target.value))}
-            className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
+            className="rounded-md border border-card-border px-3 py-2"
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
@@ -197,7 +197,7 @@ export function ListingForm({ initial }: { initial?: Initial }) {
             min={1}
             value={form.minNights}
             onChange={(e) => update("minNights", Number(e.target.value))}
-            className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
+            className="rounded-md border border-card-border px-3 py-2"
           />
         </label>
       </div>
@@ -208,7 +208,7 @@ export function ListingForm({ initial }: { initial?: Initial }) {
           value={amenitiesText}
           onChange={(e) => setAmenitiesText(e.target.value)}
           placeholder="Wifi, Kitchen, Free parking, Pool"
-          className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
+          className="rounded-md border border-card-border px-3 py-2"
         />
       </label>
 
@@ -226,7 +226,7 @@ export function ListingForm({ initial }: { initial?: Initial }) {
       <button
         type="submit"
         disabled={submitting}
-        className="mt-2 w-fit rounded-md bg-black px-4 py-2.5 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-black"
+        className="mt-2 w-fit rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white transition hover:bg-accent-deep disabled:opacity-50"
       >
         {submitting ? "Saving..." : form.id ? "Save changes" : "Create listing"}
       </button>

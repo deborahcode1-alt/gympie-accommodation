@@ -24,7 +24,7 @@ export default function AdminRootLayout({ children }: { children: React.ReactNod
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-black/[.02] dark:bg-white/[.02]">
+      <body className="min-h-full flex flex-col bg-background text-foreground">
         <AdminNav />
         <main className="flex-1">
           <div className="mx-auto w-full max-w-5xl px-6 py-8">{children}</div>

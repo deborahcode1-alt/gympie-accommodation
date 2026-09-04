@@ -25,14 +25,14 @@ export default async function EditListingPage({
           <Link
             href={`/listings/${listing.slug}`}
             target="_blank"
-            className="text-sm text-black/50 hover:underline dark:text-white/50"
+            className="text-sm text-muted hover:underline"
           >
             View public page &rarr;
           </Link>
         </div>
         <Link
           href={`/admin/listings/${listing.id}/calendar`}
-          className="rounded-md border border-black/15 px-4 py-2 text-sm font-medium dark:border-white/20"
+          className="rounded-md border border-card-border px-4 py-2 text-sm font-medium"
         >
           Calendar &amp; Airbnb sync
         </Link>
@@ -69,7 +69,7 @@ export default async function EditListingPage({
         </div>
       </section>
 
-      <div className="mt-10 border-t border-black/10 pt-6 dark:border-white/10">
+      <div className="mt-10 border-t border-card-border pt-6">
         <DeleteListingButton listingId={listing.id} name={listing.name} />
       </div>
     </div>

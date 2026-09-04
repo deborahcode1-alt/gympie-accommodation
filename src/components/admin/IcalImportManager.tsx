@@ -74,12 +74,12 @@ export function IcalImportManager({
         {imports.map((imp) => (
           <div
             key={imp.id}
-            className="flex items-center justify-between rounded-lg border border-black/10 p-3 text-sm dark:border-white/10"
+            className="flex items-center justify-between rounded-lg border border-card-border p-3 text-sm"
           >
             <div className="min-w-0">
               <p className="font-medium">{imp.label}</p>
-              <p className="truncate text-xs text-black/50 dark:text-white/50">{imp.url}</p>
-              <p className="mt-1 text-xs text-black/40 dark:text-white/40">
+              <p className="truncate text-xs text-muted">{imp.url}</p>
+              <p className="mt-1 text-xs text-muted">
                 {imp.lastError
                   ? `Sync error: ${imp.lastError}`
                   : imp.lastSyncedAt
@@ -97,7 +97,7 @@ export function IcalImportManager({
           </div>
         ))}
         {imports.length === 0 && (
-          <p className="text-sm text-black/60 dark:text-white/60">
+          <p className="text-sm text-muted">
             No calendars connected yet. Connect as many booking platforms as you use (Airbnb,
             Booking.com, VRBO, etc.) &mdash; each has an &quot;export calendar&quot; URL in its
             calendar settings.
@@ -111,19 +111,19 @@ export function IcalImportManager({
           onChange={(e) => setLabel(e.target.value)}
           placeholder="Label (e.g. Booking.com)"
           required
-          className="w-44 rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20"
+          className="w-44 rounded-md border border-card-border px-3 py-2 text-sm"
         />
         <input
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://.../calendar/ical/....ics"
           required
-          className="min-w-[260px] flex-1 rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20"
+          className="min-w-[260px] flex-1 rounded-md border border-card-border px-3 py-2 text-sm"
         />
         <button
           type="submit"
           disabled={busy}
-          className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-black"
+          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white transition hover:bg-accent-deep disabled:opacity-50"
         >
           Connect
         </button>
@@ -134,7 +134,7 @@ export function IcalImportManager({
         <button
           onClick={syncNow}
           disabled={busy}
-          className="mt-3 text-sm text-black/60 hover:underline disabled:opacity-50 dark:text-white/60"
+          className="mt-3 text-sm text-muted hover:underline disabled:opacity-50"
         >
           Sync all now
         </button>

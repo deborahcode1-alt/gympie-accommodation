@@ -27,14 +27,14 @@ export function BookingActions({ bookingId, status }: { bookingId: string; statu
         <button
           disabled={busy}
           onClick={() => setStatus("CONFIRMED")}
-          className="rounded-md bg-black px-3 py-1.5 text-xs font-medium text-white disabled:opacity-50 dark:bg-white dark:text-black"
+          className="rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-white transition hover:bg-accent-deep disabled:opacity-50"
         >
           Confirm
         </button>
         <button
           disabled={busy}
           onClick={() => setStatus("DECLINED")}
-          className="rounded-md border border-black/15 px-3 py-1.5 text-xs font-medium disabled:opacity-50 dark:border-white/20"
+          className="rounded-md border border-card-border px-3 py-1.5 text-xs font-medium disabled:opacity-50"
         >
           Decline
         </button>
@@ -47,7 +47,7 @@ export function BookingActions({ bookingId, status }: { bookingId: string; statu
       <button
         disabled={busy}
         onClick={() => setStatus("CANCELLED")}
-        className="rounded-md border border-black/15 px-3 py-1.5 text-xs font-medium disabled:opacity-50 dark:border-white/20"
+        className="rounded-md border border-card-border px-3 py-1.5 text-xs font-medium disabled:opacity-50"
       >
         Cancel
       </button>

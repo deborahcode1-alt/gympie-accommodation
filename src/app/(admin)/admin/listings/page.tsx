@@ -16,7 +16,7 @@ export default async function AdminListingsPage() {
         <h1 className="text-2xl font-semibold">Listings</h1>
         <Link
           href="/admin/listings/new"
-          className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white dark:bg-white dark:text-black"
+          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white transition hover:bg-accent-deep"
         >
           New listing
         </Link>
@@ -27,21 +27,21 @@ export default async function AdminListingsPage() {
           <Link
             key={l.id}
             href={`/admin/listings/${l.id}`}
-            className="flex items-center justify-between rounded-lg border border-black/10 p-4 hover:bg-black/[.02] dark:border-white/10 dark:hover:bg-white/[.02]"
+            className="flex items-center justify-between rounded-lg border border-card-border p-4 hover:bg-foreground/5"
           >
             <div>
               <p className="font-medium">
-                {l.name} {!l.published && <span className="text-xs text-black/40">(draft)</span>}
+                {l.name} {!l.published && <span className="text-xs text-muted">(draft)</span>}
               </p>
-              <p className="text-sm text-black/50 dark:text-white/50">
+              <p className="text-sm text-muted">
                 {formatMoney(l.basePrice)}/night &middot; {l._count.bookings} booking(s)
               </p>
             </div>
-            <span className="text-sm text-black/40">Manage &rarr;</span>
+            <span className="text-sm text-muted">Manage &rarr;</span>
           </Link>
         ))}
         {listings.length === 0 && (
-          <p className="text-sm text-black/60 dark:text-white/60">
+          <p className="text-sm text-muted">
             No listings yet. Create your first one to start taking bookings.
           </p>
         )}

@@ -136,18 +136,18 @@ export function PhotoManager({ listingId, photos }: { listingId: string; photos:
         {pending.map((p) => (
           <div
             key={p.id}
-            className="relative flex aspect-square flex-col items-center justify-center gap-1 rounded-lg border border-black/10 bg-black/[.03] p-2 text-center dark:border-white/10 dark:bg-white/[.03]"
+            className="relative flex aspect-square flex-col items-center justify-center gap-1 rounded-lg border border-card-border bg-foreground/5 p-2 text-center"
           >
             {p.status === "error" ? (
               <span className="text-xs text-red-600">{p.error}</span>
             ) : (
               <>
-                <span className="text-xs text-black/60 dark:text-white/60">
+                <span className="text-xs text-muted">
                   {p.status === "saving" ? "Saving…" : `${Math.round(p.progress)}%`}
                 </span>
-                <div className="h-1 w-3/4 overflow-hidden rounded-full bg-black/10 dark:bg-white/10">
+                <div className="h-1 w-3/4 overflow-hidden rounded-full bg-foreground/10">
                   <div
-                    className="h-full bg-black transition-all dark:bg-white"
+                    className="h-full bg-accent transition-all"
                     style={{ width: `${p.status === "saving" ? 100 : p.progress}%` }}
                   />
                 </div>
@@ -171,12 +171,12 @@ export function PhotoManager({ listingId, photos }: { listingId: string; photos:
         onClick={() => fileInputRef.current?.click()}
         className={`mt-4 flex cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed px-6 py-8 text-center transition ${
           dragging
-            ? "border-black bg-black/[.03] dark:border-white dark:bg-white/[.05]"
-            : "border-black/20 hover:bg-black/[.02] dark:border-white/20 dark:hover:bg-white/[.03]"
+            ? "border-accent bg-accent/10"
+            : "border-card-border hover:bg-foreground/5"
         }`}
       >
         <p className="text-sm font-medium">Drag photos here, or click to browse</p>
-        <p className="text-xs text-black/50 dark:text-white/50">
+        <p className="text-xs text-muted">
           JPG, PNG, WEBP, AVIF or GIF, up to 15MB each. The first photo becomes the cover photo.
         </p>
         <input
@@ -193,7 +193,7 @@ export function PhotoManager({ listingId, photos }: { listingId: string; photos:
       </div>
 
       <details className="mt-4 text-sm">
-        <summary className="cursor-pointer text-black/60 dark:text-white/60">
+        <summary className="cursor-pointer text-muted">
           Or add a photo by URL instead
         </summary>
         <form onSubmit={addPhotoByUrl} className="mt-3 flex flex-wrap gap-2">
@@ -202,18 +202,18 @@ export function PhotoManager({ listingId, photos }: { listingId: string; photos:
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://... photo URL"
             required
-            className="min-w-[220px] flex-1 rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20"
+            className="min-w-[220px] flex-1 rounded-md border border-card-border px-3 py-2 text-sm"
           />
           <input
             value={alt}
             onChange={(e) => setAlt(e.target.value)}
             placeholder="Description (optional)"
-            className="w-48 rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20"
+            className="w-48 rounded-md border border-card-border px-3 py-2 text-sm"
           />
           <button
             type="submit"
             disabled={busy}
-            className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-black"
+            className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white transition hover:bg-accent-deep disabled:opacity-50"
           >
             Add photo
           </button>

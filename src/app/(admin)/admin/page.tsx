@@ -21,16 +21,16 @@ export default async function AdminDashboardPage() {
       <h1 className="text-2xl font-semibold">Dashboard</h1>
 
       <div className="mt-6 grid grid-cols-3 gap-4">
-        <div className="rounded-lg border border-black/10 p-4 dark:border-white/10">
-          <p className="text-xs uppercase text-black/50 dark:text-white/50">Pending requests</p>
+        <div className="rounded-lg border border-card-border p-4">
+          <p className="text-xs uppercase text-muted">Pending requests</p>
           <p className="mt-1 text-2xl font-semibold">{pending.length}</p>
         </div>
-        <div className="rounded-lg border border-black/10 p-4 dark:border-white/10">
-          <p className="text-xs uppercase text-black/50 dark:text-white/50">Upcoming stays</p>
+        <div className="rounded-lg border border-card-border p-4">
+          <p className="text-xs uppercase text-muted">Upcoming stays</p>
           <p className="mt-1 text-2xl font-semibold">{upcoming}</p>
         </div>
-        <div className="rounded-lg border border-black/10 p-4 dark:border-white/10">
-          <p className="text-xs uppercase text-black/50 dark:text-white/50">Listings</p>
+        <div className="rounded-lg border border-card-border p-4">
+          <p className="text-xs uppercase text-muted">Listings</p>
           <p className="mt-1 text-2xl font-semibold">{listingCount}</p>
         </div>
       </div>
