@@ -25,6 +25,10 @@ function nightsBetween(from: Date, to: Date) {
   return Math.round(ms / (1000 * 60 * 60 * 24));
 }
 
+function formatFriendly(d: Date) {
+  return new Intl.DateTimeFormat("en-AU", { weekday: "long", month: "long", day: "numeric" }).format(d);
+}
+
 export function AvailabilityCalendar({
   slug,
   basePrice,
@@ -38,6 +42,7 @@ export function AvailabilityCalendar({
   const [range, setRange] = useState<DateRange | undefined>();
   const [guests, setGuests] = useState(1);
   const [error, setError] = useState<string | null>(null);
+  const [dayNotice, setDayNotice] = useState<string | null>(null);
 
   const today = useMemo(() => {
     const d = new Date();
@@ -49,6 +54,17 @@ export function AvailabilityCalendar({
     if (date < today) return true;
     return unavailableSet.has(toISODate(date));
   };
+
+  function rangeHasUnavailable(r: DateRange) {
+    if (!r.from) return false;
+    const end = r.to ?? r.from;
+    const cursor = new Date(r.from);
+    while (cursor <= end) {
+      if (isUnavailable(cursor)) return true;
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    return false;
+  }
 
   const nights = range?.from && range?.to ? nightsBetween(range.from, range.to) : 0;
   const total = nights > 0 ? basePrice * nights + cleaningFee : 0;
@@ -85,16 +101,24 @@ export function AvailabilityCalendar({
         <DayPicker
           mode="range"
           selected={range}
-          onSelect={setRange}
-          disabled={isUnavailable}
-          excludeDisabled
+          onSelect={(next, triggerDate) => {
+            if (isUnavailable(triggerDate)) {
+              setDayNotice(`${formatFriendly(triggerDate)} isn't available for booking.`);
+              return;
+            }
+            if (next && rangeHasUnavailable(next)) {
+              setDayNotice("Those dates include a night that isn't available — try a shorter range.");
+              return;
+            }
+            setDayNotice(null);
+            setRange(next);
+          }}
           numberOfMonths={1}
           className="!mx-auto"
-          classNames={{
-            day_button: "font-semibold text-foreground",
-          }}
+          modifiers={{ unavailable: isUnavailable, available: (d) => !isUnavailable(d) }}
           modifiersClassNames={{
-            disabled: "!font-normal !text-muted opacity-60",
+            unavailable: "!text-red-600 !bg-red-500/10 !line-through",
+            available: "!font-semibold !text-foreground",
           }}
         />
       </div>
@@ -104,9 +128,13 @@ export function AvailabilityCalendar({
           <span className="inline-block h-2.5 w-2.5 rounded-full bg-foreground" /> Available
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 rounded-full bg-muted opacity-60" /> Unavailable
+          <span className="inline-block h-2.5 w-2.5 rounded-full bg-red-500/60" /> Unavailable
         </span>
       </p>
+
+      {dayNotice && (
+        <p className="mt-2 rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-600">{dayNotice}</p>
+      )}
 
       <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
         <label className="flex flex-col gap-1">

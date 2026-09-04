@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { BookingForm } from "@/components/BookingForm";
@@ -44,6 +45,15 @@ export default async function BookPage({
           initialCheckOut={query.checkOut || ""}
           initialGuests={query.guests ? Number(query.guests) : 1}
         />
+      </div>
+
+      <div className="mt-12 border-t border-card-border pt-8 text-center">
+        <Link
+          href="/"
+          className="inline-block rounded-md border border-card-border px-5 py-2.5 text-sm font-medium transition hover:bg-foreground/5"
+        >
+          &larr; Back to home
+        </Link>
       </div>
     </div>
   );
