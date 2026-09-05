@@ -23,10 +23,19 @@ export function eachNight(checkIn: Date, checkOut: Date): Date[] {
 
 // Set of ISO "YYYY-MM-DD" nights that are already taken for a listing
 // (an occupied "night" is the night starting on that date, i.e. checkIn <= night < checkOut).
-export async function getUnavailableNights(listingId: string): Promise<Set<string>> {
+// Pass excludeBookingId when checking availability for a guest changing their own
+// existing booking, so their current dates don't block them from keeping/shifting them.
+export async function getUnavailableNights(
+  listingId: string,
+  excludeBookingId?: string
+): Promise<Set<string>> {
   const [bookings, blocked] = await Promise.all([
     prisma.booking.findMany({
-      where: { listingId, status: { in: ["PENDING", "CONFIRMED"] } },
+      where: {
+        listingId,
+        status: { in: ["PENDING", "CONFIRMED"] },
+        ...(excludeBookingId ? { id: { not: excludeBookingId } } : {}),
+      },
       select: { checkIn: true, checkOut: true },
     }),
     prisma.blockedDate.findMany({
@@ -47,8 +56,13 @@ export async function getUnavailableNights(listingId: string): Promise<Set<strin
   return nights;
 }
 
-export async function isRangeAvailable(listingId: string, checkIn: Date, checkOut: Date) {
-  const unavailable = await getUnavailableNights(listingId);
+export async function isRangeAvailable(
+  listingId: string,
+  checkIn: Date,
+  checkOut: Date,
+  excludeBookingId?: string
+) {
+  const unavailable = await getUnavailableNights(listingId, excludeBookingId);
   return eachNight(checkIn, checkOut).every(
     (n) => !unavailable.has(n.toISOString().slice(0, 10))
   );

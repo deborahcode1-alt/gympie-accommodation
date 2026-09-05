@@ -19,6 +19,8 @@ model AdminUser {
 model Host {
   id                  String  @id @default(cuid())
   name                String
+  notificationEmail   String? // falls back to ADMIN_EMAIL when not set
+  notificationPhone   String?
   squareAccessToken   String?
   squareLocationId    String?
   createdAt           DateTime @default(now())
@@ -100,6 +102,7 @@ model Booking {
   paymentStatus  PaymentStatus @default(UNPAID)
   squarePaymentId String?
   confirmationTextSentAt DateTime?
+  manageToken    String        @unique @default(cuid())
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { calcTotalPrice, isRangeAvailable, nightsBetween } from "@/lib/availability";
+import { notifyNewBooking } from "@/lib/notifications";
 
 const bookingSchema = z.object({
   listingId: z.string().min(1),
@@ -66,7 +67,10 @@ export async function POST(req: NextRequest) {
       status: "PENDING",
       agreedToTerms: data.agreedToTerms,
     },
+    include: { listing: { select: { id: true, name: true, hostId: true } } },
   });
+
+  await notifyNewBooking(booking);
 
   return NextResponse.json({ booking }, { status: 201 });
 }
