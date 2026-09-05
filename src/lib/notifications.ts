@@ -24,7 +24,7 @@ function fmtDate(d: Date) {
   return new Intl.DateTimeFormat("en-AU", { month: "short", day: "numeric", timeZone: "UTC" }).format(d);
 }
 
-function manageUrl(token: string) {
+export function manageUrl(token: string) {
   const base = process.env.NEXT_PUBLIC_SITE_URL || "https://gympie-accommodation.vercel.app";
   return `${base}/manage/${token}`;
 }
@@ -86,21 +86,30 @@ export async function notifyNewBooking(booking: BookingWithListing) {
   );
 }
 
-export async function notifyBookingConfirmed(booking: BookingWithListing) {
+export function confirmationEmailContent(booking: BookingWithListing) {
   const dates = `${fmtDate(booking.checkIn)} - ${fmtDate(booking.checkOut)}`;
   const link = manageUrl(booking.manageToken);
+  return {
+    subject: `Your booking at ${booking.listing.name} is confirmed!`,
+    text:
+      `Hi ${booking.guestName.split(" ")[0]},\n\nYour stay at ${booking.listing.name} (${dates}) is confirmed. ` +
+      `The host will be in touch about payment.\n\nNeed to change or cancel? Manage your booking here: ${link}\n\n- ${SITE_NAME}`,
+  };
+}
 
-  await tryEmail(
-    booking.guestEmail,
-    `Your booking at ${booking.listing.name} is confirmed!`,
-    `Hi ${booking.guestName.split(" ")[0]},\n\nYour stay at ${booking.listing.name} (${dates}) is confirmed. ` +
-      `The host will be in touch about payment.\n\nNeed to change or cancel? Manage your booking here: ${link}\n\n- ${SITE_NAME}`
-  );
-  await trySms(
-    booking.guestPhone,
+export function confirmationSmsContent(booking: BookingWithListing) {
+  const dates = `${fmtDate(booking.checkIn)} - ${fmtDate(booking.checkOut)}`;
+  const link = manageUrl(booking.manageToken);
+  return (
     `Hi ${booking.guestName.split(" ")[0]}, your booking at ${booking.listing.name} (${dates}) is confirmed! ` +
-      `Manage it: ${link} - ${SITE_NAME}`
+    `Manage it: ${link} - ${SITE_NAME}`
   );
+}
+
+export async function notifyBookingConfirmed(booking: BookingWithListing) {
+  const { subject, text } = confirmationEmailContent(booking);
+  await tryEmail(booking.guestEmail, subject, text);
+  await trySms(booking.guestPhone, confirmationSmsContent(booking));
 }
 
 export async function notifyBookingDeclined(booking: BookingWithListing) {

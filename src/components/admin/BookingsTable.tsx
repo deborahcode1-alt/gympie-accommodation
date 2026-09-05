@@ -13,10 +13,17 @@ type Row = {
   totalPrice: number;
   status: string;
   confirmationTextSentAt: Date | null;
+  confirmationEmailSentAt: Date | null;
   listing: { name: string };
 };
 
-export function BookingsTable({ bookings }: { bookings: Row[] }) {
+export function BookingsTable({
+  bookings,
+  showListingColumn = true,
+}: {
+  bookings: Row[];
+  showListingColumn?: boolean;
+}) {
   if (bookings.length === 0) {
     return <p className="text-sm text-muted">No bookings here yet.</p>;
   }
@@ -27,7 +34,7 @@ export function BookingsTable({ bookings }: { bookings: Row[] }) {
         <thead className="bg-foreground/5 text-xs uppercase tracking-wide text-muted">
           <tr>
             <th className="px-4 py-3">Guest</th>
-            <th className="px-4 py-3">Listing</th>
+            {showListingColumn && <th className="px-4 py-3">Listing</th>}
             <th className="px-4 py-3">Dates</th>
             <th className="px-4 py-3">Guests</th>
             <th className="px-4 py-3">Total</th>
@@ -42,7 +49,7 @@ export function BookingsTable({ bookings }: { bookings: Row[] }) {
                 <div className="font-medium">{b.guestName}</div>
                 <div className="text-xs text-muted">{b.guestEmail}</div>
               </td>
-              <td className="px-4 py-3">{b.listing.name}</td>
+              {showListingColumn && <td className="px-4 py-3">{b.listing.name}</td>}
               <td className="px-4 py-3">
                 {formatDate(b.checkIn)} &rarr; {formatDate(b.checkOut)}
               </td>
@@ -57,6 +64,7 @@ export function BookingsTable({ bookings }: { bookings: Row[] }) {
                   status={b.status}
                   guestPhone={b.guestPhone}
                   confirmationTextSentAt={b.confirmationTextSentAt}
+                  confirmationEmailSentAt={b.confirmationEmailSentAt}
                 />
               </td>
             </tr>

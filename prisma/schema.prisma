@@ -102,6 +102,7 @@ model Booking {
   paymentStatus  PaymentStatus @default(UNPAID)
   squarePaymentId String?
   confirmationTextSentAt DateTime?
+  confirmationEmailSentAt DateTime?
   manageToken    String        @unique @default(cuid())
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt

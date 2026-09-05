@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ListingForm } from "@/components/admin/ListingForm";
 import { PhotoManager } from "@/components/admin/PhotoManager";
+import { BookingsTable } from "@/components/admin/BookingsTable";
 import { DeleteListingButton } from "@/components/admin/DeleteListingButton";
 
 export default async function EditListingPage({
@@ -13,7 +14,10 @@ export default async function EditListingPage({
   const { id } = await params;
   const listing = await prisma.listing.findUnique({
     where: { id },
-    include: { photos: { orderBy: { order: "asc" } } },
+    include: {
+      photos: { orderBy: { order: "asc" } },
+      bookings: { orderBy: { checkIn: "asc" } },
+    },
   });
   if (!listing) notFound();
 
@@ -39,6 +43,17 @@ export default async function EditListingPage({
       </div>
 
       <section className="mt-8">
+        <h2 className="text-lg font-semibold">Bookings</h2>
+        <p className="mt-1 text-sm text-muted">Soonest upcoming first.</p>
+        <div className="mt-3">
+          <BookingsTable
+            bookings={listing.bookings.map((b) => ({ ...b, listing: { name: listing.name } }))}
+            showListingColumn={false}
+          />
+        </div>
+      </section>
+
+      <section className="mt-10">
         <h2 className="text-lg font-semibold">Photos</h2>
         <div className="mt-3">
           <PhotoManager listingId={listing.id} photos={listing.photos} />
