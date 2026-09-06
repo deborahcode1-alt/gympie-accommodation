@@ -8,9 +8,12 @@ datasource db {
 }
 
 model AdminUser {
-  id           String @id @default(cuid())
-  email        String @unique
-  passwordHash String
+  id                   String    @id @default(cuid())
+  email                String    @unique
+  passwordHash         String
+  pendingCodeHash      String? // sha256 of the current email verification code, if one is pending
+  pendingCodeExpiresAt DateTime?
+  pendingCodeAttempts  Int       @default(0)
 }
 
 // One per host family/business — holds the Square account payments for their
